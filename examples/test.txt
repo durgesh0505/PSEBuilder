@@ -1,0 +1,28 @@
+Welcome to PowerShell Executor Builder Test Application!
+
+This is a sample text file that demonstrates how the PowerShell Executor Builder can embed text resources into executable files.
+
+Features demonstrated:
+✓ Text file reading from embedded resources
+✓ Image display from embedded resources
+✓ Modern WPF GUI interface
+✓ Resource path detection (script dir, working dir, temp dir)
+✓ Error handling for missing files
+
+When this PowerShell script is converted to an executable using PSEBuilder:
+1. This text file (test.txt) will be embedded as a base64-encoded resource
+2. The image file (image.png) will also be embedded
+3. At runtime, resources are extracted to temp directory
+4. The application can access them seamlessly
+
+This demonstrates the power of the PowerShell Executor Builder system for creating
+self-contained executable applications with embedded resources.
+
+Test Information:
+- Script: test-gui-app.ps1
+- Text Resource: test.txt (this file)
+- Image Resource: image.png
+- Build System: PSEBuilder.ps1
+- GUI Framework: WPF/XAML
+
+Thank you for testing the PowerShell Executor Builder!
