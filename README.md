@@ -360,8 +360,8 @@ MIT License - See [LICENSE](LICENSE) file for details.
 
 ## 💬 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/PSEBuilder/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/PSEBuilder/discussions)
+- **Issues**: [GitHub Issues](https://github.com/durgesh0505/PSEBuilder/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/durgesh0505/PSEBuilder/discussions)
 - **Documentation**: Check the `/docs` folder
 
 ---
