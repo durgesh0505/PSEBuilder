@@ -54,7 +54,7 @@ Write-DebugLog "All assemblies loaded successfully"
 $xaml = @'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="PowerShell Executor Builder - XAML GUI"
+        Title="PSEBuilder - PowerShell Executor Builder"
         Height="750" Width="1000"
         MinHeight="700" MinWidth="950"
         WindowStartupLocation="CenterScreen"
