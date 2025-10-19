@@ -618,6 +618,143 @@ $xaml = @'
                     </StackPanel>
                 </Grid>
             </TabItem>
+
+            <!-- Code Signing Tab -->
+            <TabItem Header="Code Signing">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="15">
+
+                        <!-- Enable Code Signing -->
+                        <GroupBox Header="Enable Code Signing" Margin="0,0,0,15">
+                            <StackPanel>
+                                <CheckBox Name="chkEnableSigning" Content="Enable Authenticode signing for the executable"
+                                         Margin="5" FontSize="13"/>
+                                <TextBlock Text="Sign the executable with a code signing certificate to establish trust and authenticity."
+                                          FontStyle="Italic" Foreground="Gray" Margin="10,5,5,10"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <!-- Certificate Source -->
+                        <GroupBox Header="Certificate Source" Margin="0,0,0,15" Name="grpCertSource">
+                            <StackPanel>
+                                <RadioButton Name="rbWindowsStore" Content="Windows Certificate Store"
+                                           GroupName="CertSource" IsChecked="True"
+                                           Margin="5" FontSize="13"/>
+                                <RadioButton Name="rbPfxFile" Content="PFX/P12 File"
+                                           GroupName="CertSource"
+                                           Margin="5,5,5,15" FontSize="13"/>
+
+                                <!-- Windows Store Certificate Selection -->
+                                <StackPanel Name="pnlWindowsStore">
+                                    <TextBlock Text="Select Certificate from Windows Store:"
+                                              Margin="5,0,5,5" FontWeight="Bold"/>
+                                    <ComboBox Name="cmbCertificates" Margin="5"
+                                            DisplayMemberPath="Subject" Height="30"/>
+                                    <Button Name="btnRefreshCerts" Content="Refresh Certificates"
+                                           Margin="5" Padding="10,5" HorizontalAlignment="Left"/>
+                                </StackPanel>
+
+                                <!-- PFX File Selection -->
+                                <StackPanel Name="pnlPfxFile" Visibility="Collapsed">
+                                    <TextBlock Text="PFX/P12 File Path:" Margin="5,0,5,5" FontWeight="Bold"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Name="txtPfxPath" Grid.Column="0"
+                                                IsReadOnly="True"
+                                                Text="Select a PFX or P12 certificate file"/>
+                                        <Button Name="btnBrowsePfx" Grid.Column="1"
+                                               Content="Browse..." Margin="5,5,5,5"/>
+                                    </Grid>
+                                    <TextBlock Text="PFX Password:" Margin="5,10,5,5" FontWeight="Bold"/>
+                                    <PasswordBox Name="txtPfxPassword" Margin="5" Height="30"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <!-- Certificate Details -->
+                        <GroupBox Header="Certificate Details" Margin="0,0,0,15" Name="grpCertDetails">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Subject:"
+                                          Margin="5" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Name="lblCertSubject"
+                                          Text="No certificate selected" Margin="5" Foreground="#CCCCCC"/>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Issuer:"
+                                          Margin="5" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Name="lblCertIssuer"
+                                          Text="-" Margin="5" Foreground="#CCCCCC"/>
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Valid From:"
+                                          Margin="5" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Name="lblCertValidFrom"
+                                          Text="-" Margin="5" Foreground="#CCCCCC"/>
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Valid Until:"
+                                          Margin="5" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1" Name="lblCertValidUntil"
+                                          Text="-" Margin="5" Foreground="#CCCCCC"/>
+
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Thumbprint:"
+                                          Margin="5" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="4" Grid.Column="1" Name="lblCertThumbprint"
+                                          Text="-" Margin="5" Foreground="#CCCCCC"/>
+
+                                <TextBlock Grid.Row="5" Grid.Column="0" Text="Status:"
+                                          Margin="5" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="5" Grid.Column="1" Name="lblCertStatus"
+                                          Text="-" Margin="5" Foreground="#CCCCCC"/>
+                            </Grid>
+                        </GroupBox>
+
+                        <!-- Timestamp Server -->
+                        <GroupBox Header="Timestamp Server" Margin="0,0,0,15" Name="grpTimestamp">
+                            <StackPanel>
+                                <TextBlock Text="Timestamp server ensures signature validity after certificate expiration."
+                                          FontStyle="Italic" Foreground="Gray" Margin="5,0,5,10"/>
+                                <TextBlock Text="Select Timestamp Server:" Margin="5,0,5,5" FontWeight="Bold"/>
+                                <ComboBox Name="cmbTimestampServer" Margin="5" Height="30">
+                                    <ComboBoxItem Content="DigiCert (http://timestamp.digicert.com)" IsSelected="True"/>
+                                    <ComboBoxItem Content="Sectigo (http://timestamp.sectigo.com)"/>
+                                    <ComboBoxItem Content="GlobalSign (http://timestamp.globalsign.com/tsa/r6advanced1)"/>
+                                    <ComboBoxItem Content="Custom"/>
+                                </ComboBox>
+                                <TextBlock Text="Custom Timestamp URL:" Margin="5,10,5,5"
+                                          FontWeight="Bold" Name="lblCustomTimestamp" Visibility="Collapsed"/>
+                                <TextBox Name="txtCustomTimestamp" Margin="5"
+                                        Visibility="Collapsed"
+                                        Text="http://"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <!-- Self-Signed Certificate Creation -->
+                        <GroupBox Header="Create Self-Signed Certificate (Testing Only)" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="⚠️ Self-signed certificates are NOT trusted by Windows and should only be used for testing."
+                                          FontStyle="Italic" Foreground="#FFA500" Margin="5,0,5,10" TextWrapping="Wrap"/>
+                                <Button Name="btnCreateSelfSigned" Content="Create Self-Signed Certificate"
+                                       Margin="5" Padding="10,5" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
         </TabControl>
 
         <!-- Build Section -->
@@ -701,12 +838,302 @@ $btnBuild = $window.FindName("btnBuild")
 $lblBuildStatus = $window.FindName("lblBuildStatus")
 $progressBar = $window.FindName("progressBar")
 
+# Code Signing tab controls
+$chkEnableSigning = $window.FindName("chkEnableSigning")
+$rbWindowsStore = $window.FindName("rbWindowsStore")
+$rbPfxFile = $window.FindName("rbPfxFile")
+$grpCertSource = $window.FindName("grpCertSource")
+$pnlWindowsStore = $window.FindName("pnlWindowsStore")
+$pnlPfxFile = $window.FindName("pnlPfxFile")
+$cmbCertificates = $window.FindName("cmbCertificates")
+$btnRefreshCerts = $window.FindName("btnRefreshCerts")
+$txtPfxPath = $window.FindName("txtPfxPath")
+$btnBrowsePfx = $window.FindName("btnBrowsePfx")
+$txtPfxPassword = $window.FindName("txtPfxPassword")
+$grpCertDetails = $window.FindName("grpCertDetails")
+$lblCertSubject = $window.FindName("lblCertSubject")
+$lblCertIssuer = $window.FindName("lblCertIssuer")
+$lblCertValidFrom = $window.FindName("lblCertValidFrom")
+$lblCertValidUntil = $window.FindName("lblCertValidUntil")
+$lblCertThumbprint = $window.FindName("lblCertThumbprint")
+$lblCertStatus = $window.FindName("lblCertStatus")
+$grpTimestamp = $window.FindName("grpTimestamp")
+$cmbTimestampServer = $window.FindName("cmbTimestampServer")
+$lblCustomTimestamp = $window.FindName("lblCustomTimestamp")
+$txtCustomTimestamp = $window.FindName("txtCustomTimestamp")
+$btnCreateSelfSigned = $window.FindName("btnCreateSelfSigned")
+
 Write-DebugLog "All controls retrieved successfully"
 
 # Global variables for data collections
 Write-DebugLog "Creating ObservableCollection instances..."
 $global:AssetItems = New-Object System.Collections.ObjectModel.ObservableCollection[PSObject]
+$global:SelectedCertificate = $null
 Write-DebugLog "Collections created successfully"
+
+
+#region Code Signing Helper Functions
+
+function Get-CodeSigningCertificates {
+    <#
+    .SYNOPSIS
+        Retrieves code signing certificates from Windows Certificate Store
+    #>
+    try {
+        Write-DebugLog "Retrieving code signing certificates from Windows Store..."
+
+        # Get certificates from CurrentUser\My with CodeSigningCert filter
+        $certs = Get-ChildItem -Path Cert:\CurrentUser\My -CodeSigningCert -ErrorAction SilentlyContinue
+
+        if ($certs) {
+            Write-DebugLog "Found $($certs.Count) code signing certificate(s)"
+            return $certs
+        } else {
+            Write-DebugLog "No code signing certificates found in Windows Store" "WARN"
+            return @()
+        }
+    }
+    catch {
+        Write-DebugLog "Error retrieving certificates: $_" "ERROR"
+        return @()
+    }
+}
+
+function Get-PfxCertificateSecure {
+    <#
+    .SYNOPSIS
+        Loads a PFX certificate file with secure password handling
+    #>
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$PfxFilePath,
+
+        [Parameter(Mandatory=$true)]
+        [System.Security.SecureString]$SecurePassword
+    )
+
+    try {
+        Write-DebugLog "Loading PFX certificate from: $PfxFilePath"
+
+        if (-not (Test-Path $PfxFilePath)) {
+            throw "PFX file not found: $PfxFilePath"
+        }
+
+        # Convert SecureString to plain text for Get-PfxCertificate
+        $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecurePassword)
+        $plainPassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
+        [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
+
+        # Load the PFX certificate
+        $cert = Get-PfxCertificate -FilePath $PfxFilePath -Password (ConvertTo-SecureString -String $plainPassword -AsPlainText -Force)
+
+        # Clear plain password from memory
+        $plainPassword = $null
+        [System.GC]::Collect()
+
+        if ($cert) {
+            Write-DebugLog "PFX certificate loaded successfully"
+            return $cert
+        } else {
+            throw "Failed to load PFX certificate"
+        }
+    }
+    catch {
+        Write-DebugLog "Error loading PFX certificate: $_" "ERROR"
+        return $null
+    }
+}
+
+function Test-CertificateValidity {
+    <#
+    .SYNOPSIS
+        Validates a code signing certificate
+    #>
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate
+    )
+
+    $result = @{
+        Valid = $false
+        Status = ""
+        Message = ""
+        WarningLevel = "None"  # None, Warning, Error
+    }
+
+    try {
+        # Check 1: Has private key
+        if (-not $Certificate.HasPrivateKey) {
+            $result.Status = "❌ Invalid"
+            $result.Message = "Certificate does not have a private key"
+            $result.WarningLevel = "Error"
+            return $result
+        }
+
+        # Check 2: Not expired
+        $now = Get-Date
+        if ($Certificate.NotAfter -lt $now) {
+            $result.Status = "❌ Expired"
+            $result.Message = "Certificate expired on $($Certificate.NotAfter.ToString('yyyy-MM-dd'))"
+            $result.WarningLevel = "Error"
+            return $result
+        }
+
+        # Check 3: Not yet valid
+        if ($Certificate.NotBefore -gt $now) {
+            $result.Status = "❌ Not Yet Valid"
+            $result.Message = "Certificate not valid until $($Certificate.NotBefore.ToString('yyyy-MM-dd'))"
+            $result.WarningLevel = "Error"
+            return $result
+        }
+
+        # Check 4: Expiring soon (within 30 days)
+        $daysUntilExpiry = ($Certificate.NotAfter - $now).Days
+        if ($daysUntilExpiry -le 30) {
+            $result.Status = "⚠️ Expiring Soon"
+            $result.Message = "Certificate expires in $daysUntilExpiry day(s)"
+            $result.WarningLevel = "Warning"
+            $result.Valid = $true
+            return $result
+        }
+
+        # Check 5: Self-signed (informational)
+        if ($Certificate.Subject -eq $Certificate.Issuer) {
+            $result.Status = "⚠️ Self-Signed"
+            $result.Message = "Self-signed certificate (not trusted by Windows)"
+            $result.WarningLevel = "Warning"
+            $result.Valid = $true
+            return $result
+        }
+
+        # All checks passed
+        $result.Status = "✅ Valid"
+        $result.Message = "Certificate is valid and trusted"
+        $result.WarningLevel = "None"
+        $result.Valid = $true
+        return $result
+    }
+    catch {
+        $result.Status = "❌ Error"
+        $result.Message = "Validation error: $_"
+        $result.WarningLevel = "Error"
+        return $result
+    }
+}
+
+function Invoke-ExecutableSigning {
+    <#
+    .SYNOPSIS
+        Signs an executable with Authenticode signature
+    #>
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$FilePath,
+
+        [Parameter(Mandatory=$true)]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,
+
+        [Parameter(Mandatory=$false)]
+        [string]$TimestampServer = "http://timestamp.digicert.com"
+    )
+
+    try {
+        Write-DebugLog "Signing executable: $FilePath"
+        Write-DebugLog "Certificate Subject: $($Certificate.Subject)"
+        Write-DebugLog "Timestamp Server: $TimestampServer"
+
+        # Verify file exists
+        if (-not (Test-Path $FilePath)) {
+            throw "File not found: $FilePath"
+        }
+
+        # Validate certificate before signing
+        $validation = Test-CertificateValidity -Certificate $Certificate
+        if (-not $validation.Valid) {
+            throw "Certificate validation failed: $($validation.Message)"
+        }
+
+        # Sign the file with SHA256 and timestamping
+        $signature = Set-AuthenticodeSignature -FilePath $FilePath `
+                                               -Certificate $Certificate `
+                                               -TimestampServer $TimestampServer `
+                                               -HashAlgorithm SHA256 `
+                                               -ErrorAction Stop
+
+        if ($signature.Status -eq 'Valid') {
+            Write-DebugLog "Executable signed successfully"
+            return @{
+                Success = $true
+                Status = $signature.Status
+                Message = "Executable signed successfully with $($Certificate.Subject)"
+            }
+        } else {
+            throw "Signing failed with status: $($signature.Status)"
+        }
+    }
+    catch {
+        Write-DebugLog "Error signing executable: $_" "ERROR"
+        return @{
+            Success = $false
+            Status = "Error"
+            Message = "Signing failed: $_"
+        }
+    }
+}
+
+function New-SelfSignedCodeCert {
+    <#
+    .SYNOPSIS
+        Creates a self-signed code signing certificate for testing
+    #>
+    param(
+        [Parameter(Mandatory=$false)]
+        [string]$CertificateName = "PSEBuilder Test Certificate",
+
+        [Parameter(Mandatory=$false)]
+        [int]$ValidityYears = 2
+    )
+
+    try {
+        Write-DebugLog "Creating self-signed code signing certificate..."
+
+        # Create the certificate
+        $cert = New-SelfSignedCertificate -Type CodeSigningCert `
+                                          -Subject "CN=$CertificateName" `
+                                          -CertStoreLocation "Cert:\CurrentUser\My" `
+                                          -NotAfter (Get-Date).AddYears($ValidityYears) `
+                                          -KeySpec Signature `
+                                          -KeyLength 2048 `
+                                          -KeyAlgorithm RSA `
+                                          -HashAlgorithm SHA256 `
+                                          -ErrorAction Stop
+
+        if ($cert) {
+            Write-DebugLog "Self-signed certificate created successfully"
+            Write-DebugLog "Thumbprint: $($cert.Thumbprint)"
+
+            return @{
+                Success = $true
+                Certificate = $cert
+                Message = "Certificate created: $($cert.Subject)"
+                Thumbprint = $cert.Thumbprint
+            }
+        } else {
+            throw "Failed to create certificate"
+        }
+    }
+    catch {
+        Write-DebugLog "Error creating self-signed certificate: $_" "ERROR"
+        return @{
+            Success = $false
+            Certificate = $null
+            Message = "Failed to create certificate: $_"
+            Thumbprint = $null
+        }
+    }
+}
+
+#endregion Code Signing Helper Functions
 
 
 # Event handlers for browse buttons
@@ -812,6 +1239,228 @@ $btnRemoveAsset.Add_Click({
         [System.Windows.MessageBox]::Show("Please select an asset to remove.", "No Selection", "OK", "Warning")
     }
 })
+
+
+#region Code Signing Event Handlers
+
+# Enable/Disable Code Signing Controls
+$chkEnableSigning.Add_Checked({
+    Write-DebugLog "Code signing enabled"
+    $grpCertSource.IsEnabled = $true
+    $grpCertDetails.IsEnabled = $true
+    $grpTimestamp.IsEnabled = $true
+})
+
+$chkEnableSigning.Add_Unchecked({
+    Write-DebugLog "Code signing disabled"
+    $grpCertSource.IsEnabled = $false
+    $grpCertDetails.IsEnabled = $false
+    $grpTimestamp.IsEnabled = $false
+})
+
+# Toggle between Windows Store and PFX File
+$rbWindowsStore.Add_Checked({
+    Write-DebugLog "Windows Store certificate source selected"
+    $pnlWindowsStore.Visibility = "Visible"
+    $pnlPfxFile.Visibility = "Collapsed"
+
+    # Refresh certificates
+    $certs = Get-CodeSigningCertificates
+    $cmbCertificates.ItemsSource = $certs
+    if ($certs.Count -gt 0) {
+        $cmbCertificates.SelectedIndex = 0
+    }
+})
+
+$rbPfxFile.Add_Checked({
+    Write-DebugLog "PFX file certificate source selected"
+    $pnlWindowsStore.Visibility = "Collapsed"
+    $pnlPfxFile.Visibility = "Visible"
+})
+
+# Refresh Certificates Button
+$btnRefreshCerts.Add_Click({
+    Write-DebugLog "Refreshing certificates"
+    $certs = Get-CodeSigningCertificates
+    $cmbCertificates.ItemsSource = $certs
+
+    if ($certs.Count -eq 0) {
+        [System.Windows.MessageBox]::Show("No code signing certificates found in Windows Certificate Store.`n`nYou can create a self-signed certificate for testing using the button at the bottom.", "No Certificates", "OK", "Information")
+    } else {
+        $cmbCertificates.SelectedIndex = 0
+    }
+})
+
+# Certificate Selection Changed
+$cmbCertificates.Add_SelectionChanged({
+    $cert = $cmbCertificates.SelectedItem
+    if ($cert) {
+        Write-DebugLog "Certificate selected: $($cert.Subject)"
+        $global:SelectedCertificate = $cert
+
+        # Update certificate details
+        $lblCertSubject.Text = $cert.Subject
+        $lblCertIssuer.Text = $cert.Issuer
+        $lblCertValidFrom.Text = $cert.NotBefore.ToString("yyyy-MM-dd HH:mm:ss")
+        $lblCertValidUntil.Text = $cert.NotAfter.ToString("yyyy-MM-dd HH:mm:ss")
+        $lblCertThumbprint.Text = $cert.Thumbprint
+
+        # Validate certificate and update status
+        $validation = Test-CertificateValidity -Certificate $cert
+        $lblCertStatus.Text = $validation.Status + " - " + $validation.Message
+
+        # Color-code status
+        switch ($validation.WarningLevel) {
+            "Error" { $lblCertStatus.Foreground = "#FF4444" }
+            "Warning" { $lblCertStatus.Foreground = "#FFA500" }
+            default { $lblCertStatus.Foreground = "#00FF00" }
+        }
+    }
+})
+
+# Browse PFX File
+$btnBrowsePfx.Add_Click({
+    Write-DebugLog "Browsing for PFX file"
+    $openFileDialog = New-Object Microsoft.Win32.OpenFileDialog
+    $openFileDialog.Filter = "Certificate Files (*.pfx;*.p12)|*.pfx;*.p12|All Files (*.*)|*.*"
+    $openFileDialog.Title = "Select PFX Certificate File"
+
+    if ($openFileDialog.ShowDialog() -eq $true) {
+        $txtPfxPath.Text = $openFileDialog.FileName
+        Write-DebugLog "PFX file selected: $($openFileDialog.FileName)"
+
+        # Prompt for password and load certificate
+        if ($txtPfxPassword.SecurePassword.Length -gt 0) {
+            $cert = Get-PfxCertificateSecure -PfxFilePath $openFileDialog.FileName -SecurePassword $txtPfxPassword.SecurePassword
+
+            if ($cert) {
+                $global:SelectedCertificate = $cert
+
+                # Update certificate details
+                $lblCertSubject.Text = $cert.Subject
+                $lblCertIssuer.Text = $cert.Issuer
+                $lblCertValidFrom.Text = $cert.NotBefore.ToString("yyyy-MM-dd HH:mm:ss")
+                $lblCertValidUntil.Text = $cert.NotAfter.ToString("yyyy-MM-dd HH:mm:ss")
+                $lblCertThumbprint.Text = $cert.Thumbprint
+
+                # Validate certificate
+                $validation = Test-CertificateValidity -Certificate $cert
+                $lblCertStatus.Text = $validation.Status + " - " + $validation.Message
+
+                switch ($validation.WarningLevel) {
+                    "Error" { $lblCertStatus.Foreground = "#FF4444" }
+                    "Warning" { $lblCertStatus.Foreground = "#FFA500" }
+                    default { $lblCertStatus.Foreground = "#00FF00" }
+                }
+            } else {
+                [System.Windows.MessageBox]::Show("Failed to load PFX certificate. Please check the password.", "Error", "OK", "Error")
+            }
+        } else {
+            [System.Windows.MessageBox]::Show("Please enter the PFX password first.", "Password Required", "OK", "Warning")
+        }
+    }
+})
+
+# PFX Password Changed - Auto-load certificate when password is entered
+$txtPfxPassword.Add_PasswordChanged({
+    if ($txtPfxPath.Text -ne "Select a PFX or P12 certificate file" -and (Test-Path $txtPfxPath.Text)) {
+        if ($txtPfxPassword.SecurePassword.Length -gt 0) {
+            Write-DebugLog "PFX password entered, loading certificate..."
+            $cert = Get-PfxCertificateSecure -PfxFilePath $txtPfxPath.Text -SecurePassword $txtPfxPassword.SecurePassword
+
+            if ($cert) {
+                $global:SelectedCertificate = $cert
+
+                # Update certificate details
+                $lblCertSubject.Text = $cert.Subject
+                $lblCertIssuer.Text = $cert.Issuer
+                $lblCertValidFrom.Text = $cert.NotBefore.ToString("yyyy-MM-dd HH:mm:ss")
+                $lblCertValidUntil.Text = $cert.NotAfter.ToString("yyyy-MM-dd HH:mm:ss")
+                $lblCertThumbprint.Text = $cert.Thumbprint
+
+                # Validate certificate
+                $validation = Test-CertificateValidity -Certificate $cert
+                $lblCertStatus.Text = $validation.Status + " - " + $validation.Message
+
+                switch ($validation.WarningLevel) {
+                    "Error" { $lblCertStatus.Foreground = "#FF4444" }
+                    "Warning" { $lblCertStatus.Foreground = "#FFA500" }
+                    default { $lblCertStatus.Foreground = "#00FF00" }
+                }
+            }
+        }
+    }
+})
+
+# Timestamp Server Selection Changed
+$cmbTimestampServer.Add_SelectionChanged({
+    $selected = $cmbTimestampServer.SelectedItem
+    if ($selected.Content -eq "Custom") {
+        Write-DebugLog "Custom timestamp server selected"
+        $lblCustomTimestamp.Visibility = "Visible"
+        $txtCustomTimestamp.Visibility = "Visible"
+    } else {
+        Write-DebugLog "Timestamp server selected: $($selected.Content)"
+        $lblCustomTimestamp.Visibility = "Collapsed"
+        $txtCustomTimestamp.Visibility = "Collapsed"
+    }
+})
+
+# Create Self-Signed Certificate
+$btnCreateSelfSigned.Add_Click({
+    Write-DebugLog "Creating self-signed certificate"
+
+    # Prompt for certificate name
+    $certName = [Microsoft.VisualBasic.Interaction]::InputBox(
+        "Enter a name for the self-signed certificate:",
+        "Create Self-Signed Certificate",
+        "PSEBuilder Test Certificate"
+    )
+
+    if ($certName) {
+        $result = New-SelfSignedCodeCert -CertificateName $certName -ValidityYears 2
+
+        if ($result.Success) {
+            [System.Windows.MessageBox]::Show(
+                "Self-signed certificate created successfully!`n`n$($result.Message)`nThumbprint: $($result.Thumbprint)`n`n⚠️ Note: This certificate is self-signed and will NOT be trusted by Windows. It should only be used for testing.",
+                "Success",
+                "OK",
+                "Information"
+            )
+
+            # Refresh the certificate list
+            $certs = Get-CodeSigningCertificates
+            $cmbCertificates.ItemsSource = $certs
+
+            # Select the newly created certificate
+            $newCert = $certs | Where-Object { $_.Thumbprint -eq $result.Thumbprint }
+            if ($newCert) {
+                $cmbCertificates.SelectedItem = $newCert
+            }
+        } else {
+            [System.Windows.MessageBox]::Show(
+                "Failed to create self-signed certificate.`n`n$($result.Message)",
+                "Error",
+                "OK",
+                "Error"
+            )
+        }
+    }
+})
+
+# Initialize Code Signing tab (disable controls by default)
+$grpCertSource.IsEnabled = $false
+$grpCertDetails.IsEnabled = $false
+$grpTimestamp.IsEnabled = $false
+
+# Load initial certificates
+$certs = Get-CodeSigningCertificates
+$cmbCertificates.ItemsSource = $certs
+if ($certs.Count -gt 0) {
+    $cmbCertificates.SelectedIndex = 0
+}
+
+#endregion Code Signing Event Handlers
 
 
 # Build functionality - Integrated builder
@@ -933,7 +1582,18 @@ $btnBuild.Add_Click({
         $progressBar.Visibility = "Collapsed"
 
         if ($buildSuccess) {
-            $lblBuildStatus.Text = "Build completed successfully!"
+            # Check if executable was signed
+            if ($chkEnableSigning.IsChecked -eq $true -and $global:SelectedCertificate) {
+                # Verify signature
+                $signature = Get-AuthenticodeSignature -FilePath $txtOutputFile.Text
+                if ($signature.Status -eq 'Valid') {
+                    $lblBuildStatus.Text = "Build completed successfully! (Signed)"
+                } else {
+                    $lblBuildStatus.Text = "Build completed successfully! (Signing failed)"
+                }
+            } else {
+                $lblBuildStatus.Text = "Build completed successfully!"
+            }
 
             $fileInfo = Get-Item $txtOutputFile.Text
             $size = Get-FileSize $txtOutputFile.Text
@@ -941,6 +1601,23 @@ $btnBuild.Add_Click({
             $message = "Executable created successfully!`n`n"
             $message += "Path: $($txtOutputFile.Text)`n"
             $message += "Size: $size`n`n"
+
+            # Add signature status
+            if ($chkEnableSigning.IsChecked -eq $true) {
+                if ($global:SelectedCertificate) {
+                    $signature = Get-AuthenticodeSignature -FilePath $txtOutputFile.Text
+                    if ($signature.Status -eq 'Valid') {
+                        $message += "Code Signature: ✅ Valid`n"
+                        $message += "Signer: $($signature.SignerCertificate.Subject)`n"
+                        $message += "Timestamp: $($signature.TimeStamperCertificate.Subject)`n`n"
+                    } else {
+                        $message += "Code Signature: ⚠️ $($signature.Status)`n`n"
+                    }
+                } else {
+                    $message += "Code Signature: ❌ No certificate selected`n`n"
+                }
+            }
+
             $message += "Included Resources:`n"
             $message += "Main Script: $([System.IO.Path]::GetFileName($txtMainScript.Text))`n"
             $message += "Assets: $($global:AssetItems.Count)"
@@ -1569,6 +2246,56 @@ namespace $namespace
             # Release file info handle
             $fileInfo = $null
             [System.GC]::Collect()
+
+            # Code Signing Integration
+            if ($chkEnableSigning.IsChecked -eq $true) {
+                Write-DebugLog "Code signing is enabled, proceeding with signature..."
+
+                if ($global:SelectedCertificate) {
+                    try {
+                        # Get timestamp server URL
+                        $timestampUrl = "http://timestamp.digicert.com"  # Default
+                        $selectedTimestamp = $cmbTimestampServer.SelectedItem
+
+                        if ($selectedTimestamp.Content -eq "Custom") {
+                            $timestampUrl = $txtCustomTimestamp.Text
+                            if ([string]::IsNullOrWhiteSpace($timestampUrl) -or $timestampUrl -eq "http://") {
+                                Write-DebugLog "Custom timestamp URL is invalid, using default DigiCert" "WARN"
+                                $timestampUrl = "http://timestamp.digicert.com"
+                            }
+                        } elseif ($selectedTimestamp.Content -like "*Sectigo*") {
+                            $timestampUrl = "http://timestamp.sectigo.com"
+                        } elseif ($selectedTimestamp.Content -like "*GlobalSign*") {
+                            $timestampUrl = "http://timestamp.globalsign.com/tsa/r6advanced1"
+                        }
+
+                        Write-DebugLog "Signing executable with timestamp server: $timestampUrl"
+
+                        # Sign the executable
+                        $signResult = Invoke-ExecutableSigning -FilePath $OutputPath `
+                                                               -Certificate $global:SelectedCertificate `
+                                                               -TimestampServer $timestampUrl
+
+                        if ($signResult.Success) {
+                            Write-DebugLog "=== EXECUTABLE SIGNED SUCCESSFULLY ==="
+                            Write-DebugLog $signResult.Message
+                        } else {
+                            Write-DebugLog "=== SIGNING FAILED ===" "WARN"
+                            Write-DebugLog $signResult.Message "WARN"
+                            # Note: We don't throw here because the exe was built successfully
+                            # Signing failure is non-critical (exe still works)
+                        }
+                    }
+                    catch {
+                        Write-DebugLog "Error during code signing: $($_.Exception.Message)" "WARN"
+                        # Non-critical error, exe still built successfully
+                    }
+                } else {
+                    Write-DebugLog "Code signing enabled but no certificate selected" "WARN"
+                }
+            } else {
+                Write-DebugLog "Code signing is disabled, skipping signature"
+            }
 
             return $true
         } else {
