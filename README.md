@@ -328,11 +328,10 @@ Contributions welcome! Areas for improvement:
 - [x] PowerShell 7+ (Core) support ✅ **Implemented!**
 - [x] Dark mode UI theme ✅ **Implemented!**
 - [ ] Linux/.NET Core compatibility
-- [ ] Digital signature validation
+- [ ] Digital signature support (code signing)
 - [ ] AES encryption for sensitive resources
 - [ ] Plugin system for custom resource handlers
 - [ ] Build automation (CI/CD integration)
-- [ ] Localization support
 
 **How to Contribute:**
 1. Fork the repository
