@@ -239,6 +239,61 @@ $xaml = @'
             </Setter>
         </Style>
 
+        <Style TargetType="RadioButton">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Background" Value="#2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#3F3F3F"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Name="RadioBorder"
+                                    Width="18" Height="18"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="9"
+                                    VerticalAlignment="Center">
+                                <Ellipse Name="RadioCheck"
+                                        Width="10" Height="10"
+                                        Fill="Transparent"
+                                        Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Margin="5,0,0,0"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="RadioBorder" Property="Background" Value="#0078D4"/>
+                                <Setter TargetName="RadioBorder" Property="BorderBrush" Value="#0078D4"/>
+                                <Setter TargetName="RadioCheck" Property="Fill" Value="#FFFFFF"/>
+                                <Setter TargetName="RadioCheck" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="RadioBorder" Property="BorderBrush" Value="#0078D4"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsChecked" Value="True"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="RadioBorder" Property="Background" Value="#106EBE"/>
+                                <Setter TargetName="RadioBorder" Property="BorderBrush" Value="#106EBE"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="RadioBorder" Property="Background" Value="#1A1A1A"/>
+                                <Setter TargetName="RadioBorder" Property="BorderBrush" Value="#2D2D2D"/>
+                                <Setter Property="Foreground" Value="#666666"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style TargetType="CheckBox">
             <Setter Property="Foreground" Value="#FFFFFF"/>
             <Setter Property="Background" Value="#2D2D2D"/>
@@ -745,7 +800,7 @@ $xaml = @'
                         <!-- Self-Signed Certificate Creation -->
                         <GroupBox Header="Create Self-Signed Certificate (Testing Only)" Margin="0,0,0,15">
                             <StackPanel>
-                                <TextBlock Text="⚠️ Self-signed certificates are NOT trusted by Windows and should only be used for testing."
+                                <TextBlock Text="WARNING: Self-signed certificates are NOT trusted by Windows and should only be used for testing."
                                           FontStyle="Italic" Foreground="#FFA500" Margin="5,0,5,10" TextWrapping="Wrap"/>
                                 <Button Name="btnCreateSelfSigned" Content="Create Self-Signed Certificate"
                                        Margin="5" Padding="10,5" HorizontalAlignment="Left"/>
@@ -964,7 +1019,7 @@ function Test-CertificateValidity {
     try {
         # Check 1: Has private key
         if (-not $Certificate.HasPrivateKey) {
-            $result.Status = "❌ Invalid"
+            $result.Status = "[INVALID]"
             $result.Message = "Certificate does not have a private key"
             $result.WarningLevel = "Error"
             return $result
@@ -973,7 +1028,7 @@ function Test-CertificateValidity {
         # Check 2: Not expired
         $now = Get-Date
         if ($Certificate.NotAfter -lt $now) {
-            $result.Status = "❌ Expired"
+            $result.Status = "[EXPIRED]"
             $result.Message = "Certificate expired on $($Certificate.NotAfter.ToString('yyyy-MM-dd'))"
             $result.WarningLevel = "Error"
             return $result
@@ -981,7 +1036,7 @@ function Test-CertificateValidity {
 
         # Check 3: Not yet valid
         if ($Certificate.NotBefore -gt $now) {
-            $result.Status = "❌ Not Yet Valid"
+            $result.Status = "[NOT YET VALID]"
             $result.Message = "Certificate not valid until $($Certificate.NotBefore.ToString('yyyy-MM-dd'))"
             $result.WarningLevel = "Error"
             return $result
@@ -990,7 +1045,7 @@ function Test-CertificateValidity {
         # Check 4: Expiring soon (within 30 days)
         $daysUntilExpiry = ($Certificate.NotAfter - $now).Days
         if ($daysUntilExpiry -le 30) {
-            $result.Status = "⚠️ Expiring Soon"
+            $result.Status = "[EXPIRING SOON]"
             $result.Message = "Certificate expires in $daysUntilExpiry day(s)"
             $result.WarningLevel = "Warning"
             $result.Valid = $true
@@ -999,7 +1054,7 @@ function Test-CertificateValidity {
 
         # Check 5: Self-signed (informational)
         if ($Certificate.Subject -eq $Certificate.Issuer) {
-            $result.Status = "⚠️ Self-Signed"
+            $result.Status = "[SELF-SIGNED]"
             $result.Message = "Self-signed certificate (not trusted by Windows)"
             $result.WarningLevel = "Warning"
             $result.Valid = $true
@@ -1007,14 +1062,14 @@ function Test-CertificateValidity {
         }
 
         # All checks passed
-        $result.Status = "✅ Valid"
+        $result.Status = "[VALID]"
         $result.Message = "Certificate is valid and trusted"
         $result.WarningLevel = "None"
         $result.Valid = $true
         return $result
     }
     catch {
-        $result.Status = "❌ Error"
+        $result.Status = "[ERROR]"
         $result.Message = "Validation error: $_"
         $result.WarningLevel = "Error"
         return $result
@@ -1422,7 +1477,7 @@ $btnCreateSelfSigned.Add_Click({
 
         if ($result.Success) {
             [System.Windows.MessageBox]::Show(
-                "Self-signed certificate created successfully!`n`n$($result.Message)`nThumbprint: $($result.Thumbprint)`n`n⚠️ Note: This certificate is self-signed and will NOT be trusted by Windows. It should only be used for testing.",
+                "Self-signed certificate created successfully!`n`n$($result.Message)`nThumbprint: $($result.Thumbprint)`n`nWARNING: This certificate is self-signed and will NOT be trusted by Windows. It should only be used for testing.",
                 "Success",
                 "OK",
                 "Information"
@@ -1607,14 +1662,14 @@ $btnBuild.Add_Click({
                 if ($global:SelectedCertificate) {
                     $signature = Get-AuthenticodeSignature -FilePath $txtOutputFile.Text
                     if ($signature.Status -eq 'Valid') {
-                        $message += "Code Signature: ✅ Valid`n"
+                        $message += "Code Signature: [VALID]`n"
                         $message += "Signer: $($signature.SignerCertificate.Subject)`n"
                         $message += "Timestamp: $($signature.TimeStamperCertificate.Subject)`n`n"
                     } else {
-                        $message += "Code Signature: ⚠️ $($signature.Status)`n`n"
+                        $message += "Code Signature: [WARNING] $($signature.Status)`n`n"
                     }
                 } else {
-                    $message += "Code Signature: ❌ No certificate selected`n`n"
+                    $message += "Code Signature: [ERROR] No certificate selected`n`n"
                 }
             }
 
