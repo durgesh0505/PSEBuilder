@@ -58,47 +58,378 @@ $xaml = @'
         Height="750" Width="1000"
         MinHeight="700" MinWidth="950"
         WindowStartupLocation="CenterScreen"
-        Background="#FFF8F9FA">
+        Background="#1E1E1E">
 
     <Window.Resources>
-        <Style TargetType="GroupBox">
+        <!-- Dark Theme Styles -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#2D2D2D"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#3F3F3F"/>
+            <Setter Property="CaretBrush" Value="#FFFFFF"/>
+            <Setter Property="SelectionBrush" Value="#0078D4"/>
+            <Setter Property="Padding" Value="5,2"/>
             <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="10"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="BorderBrush" Value="#FFDEE2E6"/>
             <Setter Property="BorderThickness" Value="1"/>
+            <Style.Triggers>
+                <Trigger Property="IsReadOnly" Value="True">
+                    <Setter Property="Background" Value="#1A1A1A"/>
+                    <Setter Property="Foreground" Value="#CCCCCC"/>
+                    <Setter Property="BorderBrush" Value="#2D2D2D"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#1A1A1A"/>
+                    <Setter Property="Foreground" Value="#666666"/>
+                    <Setter Property="BorderBrush" Value="#2D2D2D"/>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="#0078D4"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
-        <Style TargetType="TabItem">
-            <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="12"/>
-        </Style>
+
         <Style TargetType="Button">
+            <Setter Property="Background" Value="#0078D4"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#0078D4"/>
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Padding" Value="10,5"/>
             <Setter Property="MinWidth" Value="90"/>
-            <Setter Property="Background" Value="#FF007BFF"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#106EBE"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#005A9E"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#666666"/>
+                    <Setter Property="BorderBrush" Value="#666666"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="#0078D4"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#0078D4"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="1"
+                                        Focusable="False"
+                                        IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                        ClickMode="Press">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border Name="Border" Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="1" CornerRadius="3">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="20" />
+                                                </Grid.ColumnDefinitions>
+                                                <Path Grid.Column="1"
+                                                      Fill="#FFFFFF"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Data="M 0 0 L 4 4 L 8 0 Z"/>
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <ContentPresenter Name="ContentSite"
+                                            IsHitTestVisible="False"
+                                            Content="{TemplateBinding SelectionBoxItem}"
+                                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                            ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                            Margin="5,3,25,3"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left">
+                                <ContentPresenter.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                    </Style>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                            <Popup Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
+                                <Grid Name="DropDown"
+                                      SnapsToDevicePixels="True"
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border Name="DropDownBorder"
+                                            Background="#2D2D2D"
+                                            BorderThickness="1"
+                                            BorderBrush="#3F3F3F"/>
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True"
+                                                  KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ToggleButton" Property="Background" Value="#106EBE"/>
+                                <Setter TargetName="ToggleButton" Property="BorderBrush" Value="#106EBE"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="#2D2D2D"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border Name="Border" Background="#2D2D2D"
+                                BorderThickness="0" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#0078D4"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#0078D4"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                    <Condition Property="IsHighlighted" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Border" Property="Background" Value="#106EBE"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Background" Value="#2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#3F3F3F"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Name="CheckBoxBorder"
+                                    Width="18" Height="18"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="3"
+                                    VerticalAlignment="Center">
+                                <Path Name="CheckMark"
+                                      Stretch="Uniform"
+                                      Fill="Transparent"
+                                      Data="M 2,6 L 6,10 L 14,2"
+                                      Stroke="#FFFFFF"
+                                      StrokeThickness="2"
+                                      StrokeStartLineCap="Round"
+                                      StrokeEndLineCap="Round"
+                                      StrokeLineJoin="Round"
+                                      Margin="2"
+                                      Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Margin="5,0,0,0"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="#0078D4"/>
+                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="#0078D4"/>
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="#0078D4"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsChecked" Value="True"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="#106EBE"/>
+                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="#106EBE"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="CheckBoxBorder" Property="Background" Value="#1A1A1A"/>
+                                <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="#2D2D2D"/>
+                                <Setter Property="Foreground" Value="#666666"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="GroupBox">
+            <Setter Property="Background" Value="#1E1E1E"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#3F3F3F"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="10"/>
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="BorderBrush" Value="#FFCED4DA"/>
-            <Setter Property="BorderThickness" Value="1"/>
+
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="#1E1E1E"/>
+            <Setter Property="BorderBrush" Value="#3F3F3F"/>
         </Style>
-        <Style TargetType="ComboBox">
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="5"/>
+
+        <Style TargetType="TabItem">
+            <Setter Property="Background" Value="#2D2D2D"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#3F3F3F"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border" BorderThickness="1,1,1,0"
+                                BorderBrush="#3F3F3F" CornerRadius="2,2,0,0" Margin="2,0">
+                            <ContentPresenter x:Name="ContentSite"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            ContentSource="Header" Margin="10,5"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#0078D4"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="#2D2D2D"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#106EBE"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
-        <Style TargetType="CheckBox">
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
         </Style>
-        <Style TargetType="Label">
-            <Setter Property="VerticalAlignment" Value="Center"/>
+
+        <Style TargetType="ProgressBar">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#0078D4"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Height" Value="4"/>
+        </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="#2D2D2D"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#3F3F3F"/>
+            <Setter Property="RowBackground" Value="#2D2D2D"/>
+            <Setter Property="AlternatingRowBackground" Value="#252525"/>
+            <Setter Property="HeadersVisibility" Value="All"/>
+            <Setter Property="GridLinesVisibility" Value="All"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#3F3F3F"/>
+            <Setter Property="VerticalGridLinesBrush" Value="#3F3F3F"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#2D2D2D"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#3F3F3F"/>
             <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="Background" Value="#2D2D2D"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#0078D4"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3E3E42"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#3F3F3F"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#0078D4"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="ScrollViewer">
+            <Setter Property="Background" Value="#2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#3F3F3F"/>
+        </Style>
+
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="#2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#3F3F3F"/>
+            <Setter Property="Foreground" Value="#666666"/>
+            <Setter Property="Width" Value="18"/>
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="Height" Value="18"/>
+                    <Setter Property="Width" Value="Auto"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
@@ -110,13 +441,13 @@ $xaml = @'
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <Border Grid.Row="0" Background="#FF343A40" Padding="20">
+        <Border Grid.Row="0" Background="#252525" Padding="20" BorderBrush="#3F3F3F" BorderThickness="0,0,0,1">
             <StackPanel>
                 <TextBlock Text="PowerShell Executor Builder"
                           FontSize="24" FontWeight="Bold"
-                          Foreground="White" HorizontalAlignment="Center"/>
+                          Foreground="#FFFFFF" HorizontalAlignment="Center"/>
                 <TextBlock Text="Create powerful PowerShell executables with embedded resources"
-                          FontSize="13" Foreground="#FFE9ECEF"
+                          FontSize="13" Foreground="#CCCCCC"
                           HorizontalAlignment="Center" Margin="0,5,0,0"/>
             </StackPanel>
         </Border>
@@ -143,7 +474,7 @@ $xaml = @'
                                 </Grid.ColumnDefinitions>
 
                                 <TextBox Name="txtMainScript" Grid.Row="0" Grid.Column="0"
-                                        IsReadOnly="True" Background="White"
+                                        IsReadOnly="True"
                                         Text="Select your main PowerShell script file (.ps1)"/>
                                 <Button Name="btnBrowseMainScript" Grid.Row="0" Grid.Column="1"
                                        Content="Browse..."/>
@@ -270,7 +601,7 @@ $xaml = @'
                     <DataGrid Name="dgAssets" Grid.Row="1" Margin="0,0,0,10"
                              AutoGenerateColumns="False" CanUserAddRows="False"
                              SelectionMode="Single" GridLinesVisibility="All"
-                             HeadersVisibility="All" AlternatingRowBackground="#FFF8F9FA">
+                             HeadersVisibility="All">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="File Name" Binding="{Binding Name}" Width="200"/>
                             <DataGridTextColumn Header="File Path" Binding="{Binding FilePath}" Width="400"/>
@@ -280,15 +611,17 @@ $xaml = @'
                     </DataGrid>
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Name="btnAddAsset" Content="Add Files" Margin="5"/>
-                        <Button Name="btnRemoveAsset" Content="Remove Selected" Margin="5"/>
+                        <Button Name="btnAddAsset" Content="Add Files"
+                               Margin="10" Padding="20,10" MinWidth="140" FontSize="14"/>
+                        <Button Name="btnRemoveAsset" Content="Remove Selected"
+                               Margin="10" Padding="20,10" MinWidth="180" FontSize="14"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
         </TabControl>
 
         <!-- Build Section -->
-        <Border Grid.Row="2" Background="#FFFFFF" Padding="15" BorderBrush="#FFDEE2E6" BorderThickness="0,1,0,0">
+        <Border Grid.Row="2" Background="#252525" Padding="15" BorderBrush="#3F3F3F" BorderThickness="0,1,0,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -300,13 +633,13 @@ $xaml = @'
                        Content="Build Executable"
                        FontSize="16" FontWeight="Bold"
                        Height="45" Width="250"
-                       Background="#FF28A745" Foreground="White"
+                       Background="#28A745" Foreground="White"
                        HorizontalAlignment="Center"/>
 
                 <TextBlock Name="lblBuildStatus" Grid.Row="1"
                           Text="Ready to build your PowerShell executable"
                           HorizontalAlignment="Center" Margin="0,10,0,5"
-                          FontSize="12" Foreground="#FF6C757D"/>
+                          FontSize="12" Foreground="#CCCCCC"/>
 
                 <ProgressBar Name="progressBar" Grid.Row="2"
                             Height="20" Margin="50,0,50,0"
@@ -740,6 +1073,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Principal;
 using System.Reflection;
+using System.Linq;
 
 [assembly: AssemblyTitle("$escapedTitle")]
 [assembly: AssemblyDescription("$escapedDescription")]
@@ -827,6 +1161,15 @@ namespace $namespace
                 // Set environment variable so PowerShell script can find resources
                 Environment.SetEnvironmentVariable("PS_RESOURCE_DIR", tempDir, EnvironmentVariableTarget.Process);
 
+                // Automatic PowerShell 7+ detection with fallback to 5.1
+                string psExecutable = FindPowerShellExecutable();
+                string psVersion = psExecutable.Contains("pwsh") ? "PowerShell 7+" : "Windows PowerShell 5.1";
+
+                if ($showWindow)
+                {
+                    Console.WriteLine("Using: " + psVersion + " (" + psExecutable + ")");
+                }
+
                 string psCommand = string.Format("-ExecutionPolicy $executionPolicy -File \`"{0}\`"", scriptPath);
 
                 if (args.Length > 0)
@@ -836,7 +1179,7 @@ namespace $namespace
 
                 var psi = new ProcessStartInfo
                 {
-                    FileName = "powershell.exe",
+                    FileName = psExecutable,
                     Arguments = psCommand,
                     UseShellExecute = false,
                     CreateNoWindow = !$showWindow,
@@ -928,6 +1271,70 @@ namespace $namespace
             {
                 Console.WriteLine("Failed to restart with administrator privileges: " + ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Finds PowerShell executable with preference for PowerShell 7+ (pwsh.exe)
+        /// Falls back to Windows PowerShell 5.1 (powershell.exe) if pwsh not found
+        /// </summary>
+        static string FindPowerShellExecutable()
+        {
+            // First try PowerShell 7+ (pwsh.exe)
+            string pwsh = FindExecutableInPath("pwsh.exe");
+            if (!string.IsNullOrEmpty(pwsh))
+            {
+                return pwsh;
+            }
+
+            // Fallback to Windows PowerShell 5.1 (powershell.exe)
+            string ps5 = FindExecutableInPath("powershell.exe");
+            if (!string.IsNullOrEmpty(ps5))
+            {
+                return ps5;
+            }
+
+            // Last resort: return powershell.exe and let OS handle the error
+            return "powershell.exe";
+        }
+
+        /// <summary>
+        /// Searches for executable in PATH environment variable
+        /// </summary>
+        static string FindExecutableInPath(string executableName)
+        {
+            try
+            {
+                string pathEnv = Environment.GetEnvironmentVariable("PATH");
+                if (string.IsNullOrEmpty(pathEnv))
+                {
+                    return null;
+                }
+
+                var paths = pathEnv.Split(';').Where(p => !string.IsNullOrWhiteSpace(p));
+
+                foreach (string dir in paths)
+                {
+                    try
+                    {
+                        string fullPath = Path.Combine(dir.Trim(), executableName);
+                        if (File.Exists(fullPath))
+                        {
+                            return fullPath;
+                        }
+                    }
+                    catch
+                    {
+                        // Skip invalid paths
+                        continue;
+                    }
+                }
+            }
+            catch
+            {
+                // PATH parsing failed
+            }
+
+            return null;
         }
     }
 }

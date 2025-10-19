@@ -11,6 +11,7 @@
 ## 🚀 Key Features
 
 - ✅ **Modern WPF GUI**: Easy-to-use graphical interface for building executables
+- ✅ **Professional Dark Theme**: Eye-friendly dark mode with blue accent colors following Microsoft Fluent Design
 - ✅ **Zero Dependencies**: Works on any Windows machine with PowerShell 3.0+ and .NET Framework 4.0+
 - ✅ **Multi-Resource Embedding**: Scripts, images, configs, data files - all in one executable
 - ✅ **Automatic Image Conversion**: JPG/PNG → ICO conversion built-in
@@ -26,7 +27,7 @@
 
 ![PSEBuilder GUI](docs/screenshot.png)
 
-*Modern WPF interface with tabs for configuration and asset management*
+*Modern dark-themed WPF interface with tabs for configuration and asset management*
 
 ---
 
@@ -217,7 +218,7 @@ Add any files to embed:
 
 | Feature | PSEBuilder | PS2EXE | PowerChell | Other GUI Tools |
 |---------|-----------|---------|------------|-----------------|
-| **GUI Interface** | ✅ Modern WPF | ❌ CLI Only | ❌ CLI Only | ⚠️ Various |
+| **GUI Interface** | ✅ Modern WPF + Dark Theme | ❌ CLI Only | ❌ CLI Only | ⚠️ Various |
 | **Multi-File Resources** | ✅ Yes | ❌ Single Script | ⚠️ Limited | ⚠️ Varies |
 | **Image → Icon Conversion** | ✅ Automatic | ❌ No | ❌ No | ⚠️ Rarely |
 | **Assembly Metadata** | ✅ Full Support | ⚠️ Basic | ⚠️ Basic | ⚠️ Varies |
@@ -225,6 +226,7 @@ Add any files to embed:
 | **Memory Safe** | ✅ Try-Finally | ⚠️ Basic | ⚠️ Basic | ⚠️ Unknown |
 | **Dependencies** | ✅ None | ✅ None | ✅ None | ⚠️ May Require |
 | **Security Hardened** | ✅ Yes | ⚠️ Basic | ⚠️ Basic | ⚠️ Unknown |
+| **Professional UI** | ✅ Dark Theme | ❌ N/A | ❌ N/A | ⚠️ Varies |
 
 ---
 
@@ -240,7 +242,8 @@ Powershell_CPP/
 ├── docs/
 │   ├── RESOURCE-ACCESS-GUIDE.md   # How to access embedded resources
 │   ├── USAGE-GUIDE.md            # Detailed usage guide
-│   └── COMPREHENSIVE-DOCUMENTATION.md  # Complete reference
+│   ├── COMPREHENSIVE-DOCUMENTATION.md  # Complete reference
+│   └── PowerShell-GUI-Dark-Theme-Reference.md  # Dark theme documentation
 └── README.md                  # This file
 ```
 
@@ -302,13 +305,14 @@ This project was inspired by and builds upon ideas from:
   - Demonstrated best practices for PowerShell security
 
 ### Key Innovations in PSEBuilder
-- Modern WPF GUI (no command-line needed)
+- Modern WPF GUI with professional dark theme (no command-line needed)
 - Multi-file resource embedding system
 - Automatic image-to-icon conversion
 - Direct csc.exe compilation (no file locking)
 - Memory-safe try-finally disposal patterns
 - Comprehensive security validation
 - Professional assembly metadata
+- Button-style controls with blue accent colors following Microsoft Fluent Design
 
 **Thank you to all the PowerShell community members who continue to push the boundaries of what's possible!**
 
@@ -325,7 +329,7 @@ Contributions welcome! Areas for improvement:
 - [ ] Plugin system for custom resource handlers
 - [ ] Build automation (CI/CD integration)
 - [ ] Localization support
-- [ ] Dark mode UI theme
+- [x] Dark mode UI theme ✅ **Implemented!**
 
 **How to Contribute:**
 1. Fork the repository
@@ -355,6 +359,7 @@ MIT License - See [LICENSE](LICENSE) file for details.
 - [RESOURCE-ACCESS-GUIDE.md](docs/RESOURCE-ACCESS-GUIDE.md) - How to access embedded resources in your scripts
 - [USAGE-GUIDE.md](docs/USAGE-GUIDE.md) - Detailed usage instructions
 - [COMPREHENSIVE-DOCUMENTATION.md](docs/COMPREHENSIVE-DOCUMENTATION.md) - Complete technical reference
+- [PowerShell-GUI-Dark-Theme-Reference.md](docs/PowerShell-GUI-Dark-Theme-Reference.md) - Dark theme implementation guide
 
 ---
 

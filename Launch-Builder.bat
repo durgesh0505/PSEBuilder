@@ -8,4 +8,3 @@ echo.
 powershell.exe -ExecutionPolicy Bypass -File "%~dp0PSEBuilder.ps1"
 echo.
 echo GUI closed.
-pause
