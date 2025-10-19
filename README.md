@@ -12,6 +12,7 @@
 
 - ✅ **Modern WPF GUI**: Easy-to-use graphical interface for building executables
 - ✅ **Professional Dark Theme**: Eye-friendly dark mode with blue accent colors following Microsoft Fluent Design
+- ✅ **PowerShell 7+ Support**: Automatic detection - prefers pwsh.exe (PS7+), falls back to powershell.exe (PS5.1)
 - ✅ **Zero Dependencies**: Works on any Windows machine with PowerShell 3.0+ and .NET Framework 4.0+
 - ✅ **Multi-Resource Embedding**: Scripts, images, configs, data files - all in one executable
 - ✅ **Automatic Image Conversion**: JPG/PNG → ICO conversion built-in
@@ -79,8 +80,9 @@ That's it! Everything is embedded in a single .exe file.
 1. **Resource Embedding**: Files are Base64-encoded and embedded into C# code
 2. **Direct Compilation**: Uses `csc.exe` directly (no Add-Type assembly loading)
 3. **Runtime Extraction**: C# wrapper extracts resources to temp directory
-4. **PowerShell Execution**: Launches `powershell.exe` with your script
-5. **Automatic Cleanup**: Temp files cleaned up after execution
+4. **PowerShell Detection**: Automatically searches for `pwsh.exe` (PowerShell 7+) first, then `powershell.exe` (PowerShell 5.1)
+5. **PowerShell Execution**: Launches detected PowerShell version with your script
+6. **Automatic Cleanup**: Temp files cleaned up after execution
 
 ### Resource Access in Your Scripts
 PSEBuilder automatically provides the `Get-ResourcePath` helper function:
@@ -200,7 +202,6 @@ Add any files to embed:
 
 ### Current Limitations
 - **Windows-only**: Requires Windows PowerShell and .NET Framework
-- **PowerShell 5.1**: Not compatible with PowerShell 7+ (Core) scripts
 - **File Icon Only**: Taskbar shows PowerShell icon (limitation of C# → PowerShell.exe architecture)
 - **Temp File Storage**: Resources extracted to temp directory at runtime
 - **No Digital Signing**: You must sign the exe separately if needed
@@ -219,6 +220,7 @@ Add any files to embed:
 | Feature | PSEBuilder | PS2EXE | PowerChell | Other GUI Tools |
 |---------|-----------|---------|------------|-----------------|
 | **GUI Interface** | ✅ Modern WPF + Dark Theme | ❌ CLI Only | ❌ CLI Only | ⚠️ Various |
+| **PowerShell 7+ Support** | ✅ Auto-Detect | ⚠️ Limited | ❌ No | ⚠️ Unknown |
 | **Multi-File Resources** | ✅ Yes | ❌ Single Script | ⚠️ Limited | ⚠️ Varies |
 | **Image → Icon Conversion** | ✅ Automatic | ❌ No | ❌ No | ⚠️ Rarely |
 | **Assembly Metadata** | ✅ Full Support | ⚠️ Basic | ⚠️ Basic | ⚠️ Varies |
@@ -306,6 +308,7 @@ This project was inspired by and builds upon ideas from:
 
 ### Key Innovations in PSEBuilder
 - Modern WPF GUI with professional dark theme (no command-line needed)
+- PowerShell 7+ automatic detection with intelligent fallback to 5.1
 - Multi-file resource embedding system
 - Automatic image-to-icon conversion
 - Direct csc.exe compilation (no file locking)
@@ -322,14 +325,14 @@ This project was inspired by and builds upon ideas from:
 
 Contributions welcome! Areas for improvement:
 
-- [ ] PowerShell 7+ (Core) support
+- [x] PowerShell 7+ (Core) support ✅ **Implemented!**
+- [x] Dark mode UI theme ✅ **Implemented!**
 - [ ] Linux/.NET Core compatibility
 - [ ] Digital signature validation
 - [ ] AES encryption for sensitive resources
 - [ ] Plugin system for custom resource handlers
 - [ ] Build automation (CI/CD integration)
 - [ ] Localization support
-- [x] Dark mode UI theme ✅ **Implemented!**
 
 **How to Contribute:**
 1. Fork the repository
@@ -360,6 +363,7 @@ MIT License - See [LICENSE](LICENSE) file for details.
 - [USAGE-GUIDE.md](docs/USAGE-GUIDE.md) - Detailed usage instructions
 - [COMPREHENSIVE-DOCUMENTATION.md](docs/COMPREHENSIVE-DOCUMENTATION.md) - Complete technical reference
 - [PowerShell-GUI-Dark-Theme-Reference.md](docs/PowerShell-GUI-Dark-Theme-Reference.md) - Dark theme implementation guide
+- [POWERSHELL7-RESEARCH.md](docs/POWERSHELL7-RESEARCH.md) - PowerShell 7+ support research and implementation details
 
 ---
 
@@ -373,14 +377,17 @@ MIT License - See [LICENSE](LICENSE) file for details.
 
 ## 🔮 Roadmap
 
-### Version 1.1 (Next Release)
+### Version 1.1 (Current)
+- [x] PowerShell 7+ support ✅ **Completed!**
+- [x] Dark theme UI ✅ **Completed!**
+
+### Version 1.2 (Next Release)
 - [ ] Configuration save/load (JSON presets)
 - [ ] Recent files menu
 - [ ] Build history
 - [ ] Drag-and-drop file support
 
 ### Version 2.0 (Future)
-- [ ] PowerShell 7+ support
 - [ ] Linux/.NET Core support
 - [ ] Command-line mode (scriptable builds)
 - [ ] Template system

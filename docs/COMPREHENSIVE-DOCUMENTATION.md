@@ -70,7 +70,7 @@ The project evolved through multiple phases:
 - **R13**: Pure PowerShell implementation (no C# compilation)
 - **R14**: Native WPF/XAML support
 - **R15**: No external dependencies beyond .NET Framework
-- **R16**: Windows PowerShell 5.1+ compatibility
+- **R16**: Windows PowerShell 5.1+ and PowerShell 7+ compatibility with automatic detection
 - **R17**: Self-contained executable generation
 
 ### 2.2 Non-Functional Requirements
@@ -519,13 +519,14 @@ Project Root/
 | Build Process | 5-30s | ~100MB | Depends on resource size |
 | Config Save | <1s | ~1MB | JSON serialization |
 
-### Appendix E: Browser Compatibility Matrix
+### Appendix E: PowerShell Compatibility Matrix
 | Feature | PowerShell 5.1 | PowerShell 7+ | Windows 10 | Windows 11 |
 |---------|----------------|---------------|------------|------------|
 | XAML GUI | ✓ | ✓ | ✓ | ✓ |
 | File Dialogs | ✓ | ✓ | ✓ | ✓ |
-| WPF Support | ✓ | Limited | ✓ | ✓ |
+| WPF Support | ✓ | ✓ | ✓ | ✓ |
 | Add-Type | ✓ | ✓ | ✓ | ✓ |
+| Auto-Detection | N/A | ✓ (Preferred) | ✓ | ✓ |
 
 ---
 

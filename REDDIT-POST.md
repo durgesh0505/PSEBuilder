@@ -12,26 +12,29 @@ I'm relatively new to PowerShell development and wanted to share a project I've 
 
 ### What is it?
 
-It's a GUI tool built on top of PS2EXE that makes converting PowerShell scripts into standalone executables much easier, especially for those who prefer a visual interface over command-line options.
+A modern GUI-based PowerShell executable builder that creates standalone Windows executables from PowerShell scripts. Inspired by PS2EXE, but with a professional interface, multi-resource support, and automatic PowerShell 7+ detection!
 
 ### Key Features:
 
-- **Modern WPF Interface** - Clean, intuitive GUI instead of remembering PS2EXE command-line parameters
-- **Resource Embedding** - Easily embed images, text files, JSON configs, and other resources directly into your EXE
-- **Code Obfuscation** - Built-in variable/function name randomization for basic protection
-- **Icon Management** - Simple icon selection and conversion from images
-- **Real-time Validation** - Checks your script syntax before building
-- **One-Click Building** - All PS2EXE options accessible through checkboxes and dropdowns
+- **Modern Dark Theme Interface** - Professional WPF GUI with Microsoft Fluent Design colors (dark mode built-in!)
+- **PowerShell 7+ Support** - Automatically detects and uses pwsh.exe (PowerShell 7+) with intelligent fallback to powershell.exe (5.1)
+- **Multi-Resource Embedding** - Easily embed images, configs, JSON files, certificates, and any data files directly into your EXE
+- **Automatic Icon Conversion** - Drop in PNG/JPG images and they're automatically converted to .ico format
+- **Direct csc.exe Compilation** - No file locking issues, memory-safe with proper disposal patterns
+- **Security Hardened** - Input validation, resource size limits, injection-proof string escaping
+- **Zero Dependencies** - Works on any Windows machine with PowerShell 3.0+ and .NET Framework 4.0+ (already built-in!)
+- **Professional Metadata** - Company, version, copyright, description embedded in exe properties
 
 ### Why I built it:
 
-I found myself constantly looking up PS2EXE parameters and struggling with resource management in compiled scripts. This tool streamlines the entire workflow and makes it accessible even if you're not familiar with all the PS2EXE switches.
+I wanted a tool that combined the ease of PS2EXE with modern features like resource management, automatic PS7+ support, and a beautiful dark-themed GUI. No more command-line parameter lookups or separate resource management!
 
 ### Tech Stack:
 
-- PowerShell WPF (XAML)
-- PS2EXE module for compilation
-- Built-in resource embedding system
+- PowerShell WPF (XAML) with dark theme
+- Direct csc.exe compilation (no Add-Type)
+- C# wrapper with automatic PowerShell version detection
+- Base64 resource embedding system
 
 ### Links:
 
@@ -40,7 +43,7 @@ I found myself constantly looking up PS2EXE parameters and struggling with resou
 
 ### What's Next:
 
-Planning to add configuration presets, batch conversion, and digital signing support in future versions.
+Planning to add configuration save/load presets, drag-and-drop file support, and build history in future versions.
 
 Would love to hear your feedback or suggestions! This is one of my first projects in the PowerShell community, so any constructive criticism is welcome. 😊
 
