@@ -938,11 +938,12 @@ function Get-CodeSigningCertificates {
         Write-DebugLog "Retrieving code signing certificates from Windows Store..."
 
         # Get certificates from CurrentUser\My with CodeSigningCert filter
-        $certs = Get-ChildItem -Path Cert:\CurrentUser\My -CodeSigningCert -ErrorAction SilentlyContinue
+        $certs = @(Get-ChildItem -Path Cert:\CurrentUser\My -CodeSigningCert -ErrorAction SilentlyContinue)
 
-        if ($certs) {
+        if ($certs.Count -gt 0) {
             Write-DebugLog "Found $($certs.Count) code signing certificate(s)"
-            return $certs
+            # Always return as array, even for single certificate
+            return ,$certs
         } else {
             Write-DebugLog "No code signing certificates found in Windows Store" "WARN"
             return @()
