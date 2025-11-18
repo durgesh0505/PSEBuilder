@@ -1806,6 +1806,8 @@ using System.Diagnostics;
 using System.Security.Principal;
 using System.Reflection;
 using System.Linq;
+using System.Windows.Forms;
+using System.Drawing;
 
 [assembly: AssemblyTitle("$escapedTitle")]
 [assembly: AssemblyDescription("$escapedDescription")]
@@ -1817,6 +1819,105 @@ using System.Linq;
 
 namespace $namespace
 {
+    /// <summary>
+    /// Hidden form that hosts PowerShell child process and displays custom icon in taskbar
+    /// </summary>
+    class PowerShellHostForm : Form
+    {
+        private Process _process;
+        private Timer _monitorTimer;
+        private int _exitCode = 0;
+        private int _timeoutMinutes = 0;
+        private DateTime _startTime;
+
+        public int ExitCode { get { return _exitCode; } }
+
+        public PowerShellHostForm(int timeoutMinutes)
+        {
+            _timeoutMinutes = timeoutMinutes;
+            _startTime = DateTime.Now;
+
+            // Configure form to be invisible but show in taskbar
+            var titleAttr = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>();
+            this.Text = titleAttr != null ? titleAttr.Title : "PowerShell Application";
+            this.Size = new Size(1, 1);
+            this.StartPosition = FormStartPosition.Manual;
+            this.Location = new Point(-10000, -10000);
+            this.ShowInTaskbar = true;
+            this.WindowState = FormWindowState.Minimized;
+            this.Opacity = 0.01; // Nearly invisible but still registers in taskbar
+
+            // Extract and set icon
+            try
+            {
+                string exePath = Assembly.GetExecutingAssembly().Location;
+                this.Icon = Icon.ExtractAssociatedIcon(exePath);
+            }
+            catch
+            {
+                // Fallback to default icon if extraction fails
+            }
+
+            // Setup process monitor
+            _monitorTimer = new Timer();
+            _monitorTimer.Interval = 100; // Check every 100ms
+            _monitorTimer.Tick += MonitorProcess;
+        }
+
+        public void StartPowerShellProcess(Process process)
+        {
+            _process = process;
+            _monitorTimer.Start();
+        }
+
+        private void MonitorProcess(object sender, EventArgs e)
+        {
+            if (_process != null)
+            {
+                // Check for timeout
+                if (_timeoutMinutes > 0)
+                {
+                    TimeSpan elapsed = DateTime.Now - _startTime;
+                    if (elapsed.TotalMinutes >= _timeoutMinutes)
+                    {
+                        try
+                        {
+                            if (!_process.HasExited)
+                            {
+                                _process.Kill();
+                                _exitCode = -1;
+                            }
+                        }
+                        catch { }
+                        _monitorTimer.Stop();
+                        this.Close();
+                        return;
+                    }
+                }
+
+                // Check if process exited
+                if (_process.HasExited)
+                {
+                    _exitCode = _process.ExitCode;
+                    _monitorTimer.Stop();
+                    this.Close();
+                }
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_monitorTimer != null)
+                {
+                    _monitorTimer.Dispose();
+                }
+            }
+            base.Dispose(disposing);
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -1940,23 +2041,53 @@ namespace $namespace
                 }
 
                 int timeoutMinutes = $timeoutMinutes;
-                bool exited = false;
-                if (timeoutMinutes > 0)
+                int exitCode = 0;
+
+                // Check if icon was embedded to decide on GUI vs console mode
+                bool hasIcon = false;
+                try
                 {
-                    exited = process.WaitForExit(timeoutMinutes * 60 * 1000);
-                    if (!exited)
-                    {
-                        Console.WriteLine("Process timed out after {0} minutes. Terminating...", timeoutMinutes);
-                        process.Kill();
-                    }
+                    Icon testIcon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
+                    hasIcon = (testIcon != null && testIcon.Handle != IntPtr.Zero);
+                }
+                catch { }
+
+                // Use GUI wrapper for taskbar icon display when:
+                // 1. Icon is embedded
+                // 2. ShowWindow is false (don't show PowerShell console)
+                if (hasIcon && !$showWindow)
+                {
+                    // Use Windows Forms for proper taskbar icon display
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+
+                    var form = new PowerShellHostForm(timeoutMinutes);
+                    form.StartPowerShellProcess(process);
+                    Application.Run(form);
+
+                    exitCode = form.ExitCode;
                 }
                 else
                 {
-                    process.WaitForExit();
-                    exited = true;
-                }
+                    // Original console-based waiting (for ShowWindow=true or no icon)
+                    bool exited = false;
+                    if (timeoutMinutes > 0)
+                    {
+                        exited = process.WaitForExit(timeoutMinutes * 60 * 1000);
+                        if (!exited)
+                        {
+                            Console.WriteLine("Process timed out after {0} minutes. Terminating...", timeoutMinutes);
+                            process.Kill();
+                        }
+                    }
+                    else
+                    {
+                        process.WaitForExit();
+                        exited = true;
+                    }
 
-                int exitCode = exited ? process.ExitCode : -1;
+                    exitCode = exited ? process.ExitCode : -1;
+                }
 
                 try
                 {
@@ -2221,6 +2352,8 @@ namespace $namespace
             "/out:`"$OutputPath`"",
             "/reference:System.dll",
             "/reference:System.Core.dll",
+            "/reference:System.Windows.Forms.dll",
+            "/reference:System.Drawing.dll",
             "/optimize+",
             "/nologo"
         )
